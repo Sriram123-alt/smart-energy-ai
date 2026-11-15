@@ -1,0 +1,18 @@
+# Pyrefly configuration file for Smart Energy AI
+
+[tool.pyrefly]
+preset = "off"
+typeCheckingMode = "off"
+disableTypeErrors = true
+disableLanguageServices = true
+
+project-excludes = [
+    "**/_pyrefly_virtual_/**",
+    "**/inmemory/**",
+    "**/*venv/**",
+    "**/node_modules/**",
+    "**/__pycache__/**",
+    "**/datasets/**",
+    "**/frontend/**",
+    "**/*"
+]

@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/backend.Dockerfile
+    container_name: smart-energy-ai-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=smart-energy-ai-deep-learning-secret-key-19827364
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+    volumes:
+      - ../backend/app/smart_energy.db:/app/backend/app/smart_energy.db
+      - ../backend/app/dl/saved_models:/app/backend/app/dl/saved_models
+    networks:
+      - smart-energy-net
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/frontend.Dockerfile
+    container_name: smart-energy-ai-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - smart-energy-net
+
+networks:
+  smart-energy-net:
+    driver: bridge

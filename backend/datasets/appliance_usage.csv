@@ -1,0 +1,7 @@
+appliance_id,name,category,avg_wattage,daily_hours
+app_1,Central Air Conditioner,Cooling/Heating,3500,6
+app_2,Smart Refrigerator,Kitchen,150,24
+app_3,Electric Vehicle Charger,EV,7200,2
+app_4,Lighting (LEDs & Plugs),Lighting,150,5
+app_5,Smart Inverter,Solar,-1200,8
+app_6,Washing Machine & Dryer,Laundry,1500,1

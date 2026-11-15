@@ -1,0 +1,41 @@
+"""
+Smart Energy AI - Core Constants & Enterprise Configuration Parameters
+"""
+
+# Tariff & Utility Pricing Constants (USD per kWh)
+DEFAULT_BASE_RATE_PER_KWH = 0.14
+DEFAULT_PEAK_RATE_PER_KWH = 0.28
+DEFAULT_OFF_PEAK_RATE_PER_KWH = 0.08
+DEFAULT_MONTHLY_SERVICE_FEE = 15.00
+DEFAULT_TRANSMISSION_SURCHARGE_PCT = 0.18
+DEFAULT_TAX_SURCHARGE_PCT = 0.075
+
+# Peak Window Hours (24-hour notation)
+PEAK_HOURS_START = 16  # 4:00 PM
+PEAK_HOURS_END = 21    # 9:00 PM
+SOLAR_PEAK_START = 10  # 10:00 AM
+SOLAR_PEAK_END = 15    # 3:00 PM
+
+# Environmental & Carbon Intensity Standards
+# US Grid Average is ~0.42 kg CO2 per kWh (420 grams CO2/kWh)
+GRID_CO2_EMISSION_FACTOR_KG_PER_KWH = 0.42
+SOLAR_CO2_AVOIDANCE_FACTOR_KG_PER_KWH = 0.45
+TREE_CARBON_ABSORPTION_KG_PER_DAY = 0.06   # ~22 kg/year per mature tree
+CAR_MILES_PER_KG_CO2 = 2.5                 # ~0.40 kg CO2 emitted per vehicle mile
+
+# Anomaly Thresholds
+ANOMALY_Z_SCORE_THRESHOLD = 2.8
+ANOMALY_RECONSTRUCTION_ERROR_PERCENTILE = 95.0
+STANDBY_LEAKAGE_THRESHOLD_WATTS = 200
+
+# Deep Learning Hyperparameters
+LSTM_SEQUENCE_LENGTH = 24
+LSTM_FORECAST_HORIZON = 24
+GNN_FEATURE_DIM = 8
+GNN_EMBEDDING_DIM = 32
+AUTOENCODER_LATENT_DIM = 4
+
+# Severity Levels
+SEVERITY_INFO = "info"
+SEVERITY_WARNING = "warning"
+SEVERITY_CRITICAL = "critical"
