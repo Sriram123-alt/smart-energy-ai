@@ -555,7 +555,7 @@ export function ModelMetrics() {
             <div className="p-6 rounded-2xl bg-slate-900/60 backdrop-blur-md border border-slate-800 space-y-4">
               <h3 className="text-sm font-bold text-slate-200">Hyperparameters & Configuration</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-0 font-mono text-xs divide-y divide-slate-800/50">
-                {Object.entries(model.hyperparams).map(([key, val], i) => (
+                {Object.entries(model.hyperparams).map(([key, val]) => (
                   <div key={key} className="flex items-baseline justify-between py-2.5 px-1 hover:bg-slate-800/20 rounded transition">
                     <span className="text-slate-500 text-[11px] mr-4 shrink-0">{key}</span>
                     <span className={`${c.text} text-right text-[11px] font-bold`}>{val}</span>

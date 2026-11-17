@@ -104,7 +104,6 @@ function StatCard({ label, value, unit, sub, color = "text-white", badge }) {
 export function EnergyAnalysis() {
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState("Today");
-  const [todayData, setTodayData] = useState(null);
   const [loadCurve, setLoadCurve] = useState([]);
   const [billHistory, setBillHistory] = useState([]);
   const [appliances, setAppliances] = useState([]);
@@ -112,13 +111,12 @@ export function EnergyAnalysis() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [summary, curve, bills, devices] = await Promise.all([
+        const [, curve, bills, devices] = await Promise.all([
           energyService.getTodaySummary(),
           energyService.getHourlyLoadCurve(),
           energyService.getMonthlyBillHistory(),
           applianceService.getAppliances(),
         ]);
-        setTodayData(summary);
         setLoadCurve(curve);
         setBillHistory(bills);
         setAppliances(devices);

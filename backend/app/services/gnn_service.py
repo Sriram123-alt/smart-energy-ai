@@ -1,11 +1,9 @@
 import os
 import pickle
-import keras
 import pandas as pd
 import numpy as np
 from app.config.settings import settings
 from app.dl.preprocessing.graph_builder import build_energy_graph
-from app.dl.models.gnn_energy_graph import GraphConvLayer
 
 class GNNService:
     @staticmethod
@@ -46,6 +44,8 @@ class GNNService:
         
         if os.path.exists(model_path):
             try:
+                import keras
+                from app.dl.models.gnn_energy_graph import GraphConvLayer
                 model = keras.models.load_model(model_path, custom_objects={"GraphConvLayer": GraphConvLayer})
                 raw_preds = model.predict({"node_features": X_scaled, "norm_adj": A_norm}, batch_size=len(X_scaled), verbose=0)
 
@@ -167,6 +167,8 @@ class GNNService:
 
         if os.path.exists(model_path):
             try:
+                import keras
+                from app.dl.models.gnn_energy_graph import GraphConvLayer
                 model = keras.models.load_model(model_path, custom_objects={"GraphConvLayer": GraphConvLayer})
                 raw_preds = model.predict({"node_features": X_scaled, "norm_adj": A_norm}, batch_size=n_custom, verbose=0)
                 preds_unscaled = target_scaler.inverse_transform(raw_preds)

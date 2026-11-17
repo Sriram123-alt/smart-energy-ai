@@ -1,6 +1,5 @@
 import os
 import numpy as np
-import keras
 from app.config.settings import settings
 from app.dl.preprocessing.normalize import DataNormalizer
 
@@ -9,13 +8,18 @@ _scaler = None
 
 def load_resources():
     global _model, _scaler
-    model_path = os.path.join(settings.SAVED_MODELS_DIR, "autoencoder_model.keras")
-    scaler_path = os.path.join(settings.SAVED_MODELS_DIR, "autoencoder_scaler.pkl")
-    
-    if _model is None and os.path.exists(model_path):
-        _model = keras.models.load_model(model_path)
-    if _scaler is None and os.path.exists(scaler_path):
-        _scaler = DataNormalizer.load(scaler_path)
+    try:
+        import keras
+        model_path = os.path.join(settings.SAVED_MODELS_DIR, "autoencoder_model.keras")
+        scaler_path = os.path.join(settings.SAVED_MODELS_DIR, "autoencoder_scaler.pkl")
+        
+        if _model is None and os.path.exists(model_path):
+            _model = keras.models.load_model(model_path)
+        if _scaler is None and os.path.exists(scaler_path):
+            _scaler = DataNormalizer.load(scaler_path)
+    except Exception as e:
+        _model = None
+        _scaler = None
         
     return _model, _scaler
 

@@ -13,11 +13,11 @@ export const authService = {
     } catch (e) {
       // Check if it is a validation/credential error from server
       if (e.response && e.response.data && e.response.data.detail) {
-        throw new Error(e.response.data.detail);
+        throw new Error(e.response.data.detail, { cause: e });
       }
       console.warn("Backend login API unavailable, falling back to mock session", e);
       if (!email || !password) {
-        throw new Error("Email and password are required");
+        throw new Error("Email and password are required", { cause: e });
       }
       if (email.includes("@")) {
         return {
@@ -29,7 +29,7 @@ export const authService = {
           }
         };
       } else {
-        throw new Error("Invalid email address");
+        throw new Error("Invalid email address", { cause: e });
       }
     }
   },
@@ -42,14 +42,14 @@ export const authService = {
       return { user };
     } catch (e) {
       if (e.response && e.response.data && e.response.data.detail) {
-        throw new Error(e.response.data.detail);
+        throw new Error(e.response.data.detail, { cause: e });
       }
       console.warn("Backend register API unavailable, falling back to mock session", e);
       if (!name || !email || !password) {
-        throw new Error("All fields are required");
+        throw new Error("All fields are required", { cause: e });
       }
       if (password.length < 6) {
-        throw new Error("Password must be at least 6 characters");
+        throw new Error("Password must be at least 6 characters", { cause: e });
       }
       return {
         user: {

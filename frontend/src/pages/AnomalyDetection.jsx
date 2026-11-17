@@ -40,7 +40,7 @@ export function AnomalyDetection() {
       setTestLoading(false);
       setTestMessage(`Test alert email successfully dispatched to ${emailAddress}!`);
       setTimeout(() => setTestMessage(""), 5000);
-    } catch (e) {
+    } catch {
       setTestLoading(false);
       setTestMessage("Failed to send test alert email.");
       setTimeout(() => setTestMessage(""), 5000);

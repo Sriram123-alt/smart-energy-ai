@@ -63,7 +63,7 @@ export function Dashboard() {
         // Keep anomalies count updated
         const anomData = await anomalyService.getAnomalies();
         setActiveAnomalies(anomData.filter(a => !a.resolved).length);
-      } catch (e) {
+      } catch {
         // silently skip polling errors
       }
     }, 5000);

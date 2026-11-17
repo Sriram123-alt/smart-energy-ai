@@ -1,6 +1,5 @@
 import os
 import numpy as np
-import keras
 from app.config.settings import settings
 from app.dl.preprocessing.normalize import DataNormalizer
 
@@ -10,16 +9,22 @@ _out_scaler = None
 
 def load_resources():
     global _model, _in_scaler, _out_scaler
-    model_path = os.path.join(settings.SAVED_MODELS_DIR, "whatif_model.keras")
-    in_scaler_path = os.path.join(settings.SAVED_MODELS_DIR, "whatif_input_scaler.pkl")
-    out_scaler_path = os.path.join(settings.SAVED_MODELS_DIR, "whatif_output_scaler.pkl")
-    
-    if _model is None and os.path.exists(model_path):
-        _model = keras.models.load_model(model_path)
-    if _in_scaler is None and os.path.exists(in_scaler_path):
-        _in_scaler = DataNormalizer.load(in_scaler_path)
-    if _out_scaler is None and os.path.exists(out_scaler_path):
-        _out_scaler = DataNormalizer.load(out_scaler_path)
+    try:
+        import keras
+        model_path = os.path.join(settings.SAVED_MODELS_DIR, "whatif_model.keras")
+        in_scaler_path = os.path.join(settings.SAVED_MODELS_DIR, "whatif_input_scaler.pkl")
+        out_scaler_path = os.path.join(settings.SAVED_MODELS_DIR, "whatif_output_scaler.pkl")
+        
+        if _model is None and os.path.exists(model_path):
+            _model = keras.models.load_model(model_path)
+        if _in_scaler is None and os.path.exists(in_scaler_path):
+            _in_scaler = DataNormalizer.load(in_scaler_path)
+        if _out_scaler is None and os.path.exists(out_scaler_path):
+            _out_scaler = DataNormalizer.load(out_scaler_path)
+    except Exception as e:
+        _model = None
+        _in_scaler = None
+        _out_scaler = None
         
     return _model, _in_scaler, _out_scaler
 

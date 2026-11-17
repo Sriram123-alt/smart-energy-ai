@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { gnnService } from "../services/gnnService";
 import { Loader } from "../components/common/Loader";
 
@@ -13,10 +13,13 @@ function GraphCanvas({ nodes, edges, predictions, selectedNodeId, onSelectNode }
   const [hoveredNode, setHoveredNode] = useState(null);
 
   // Build prediction lookup
-  const predMap = {};
-  (predictions || []).forEach((p) => {
-    predMap[p.householdId] = p;
-  });
+  const predMap = useMemo(() => {
+    const map = {};
+    (predictions || []).forEach((p) => {
+      map[p.householdId] = p;
+    });
+    return map;
+  }, [predictions]);
 
   // Compute canvas node positions in a circle layout
   const WIDTH = 700;
@@ -25,17 +28,22 @@ function GraphCanvas({ nodes, edges, predictions, selectedNodeId, onSelectNode }
   const CY = HEIGHT / 2;
   const R = Math.min(CX, CY) - 80;
 
-  const nodePositions = nodes.map((n, i) => {
-    const angle = (2 * Math.PI * i) / Math.max(1, nodes.length) - Math.PI / 2;
-    return {
-      ...n,
-      x: CX + R * Math.cos(angle),
-      y: CY + R * Math.sin(angle),
-    };
-  });
+  const nodePositions = useMemo(() => {
+    return nodes.map((n, i) => {
+      const angle = (2 * Math.PI * i) / Math.max(1, nodes.length) - Math.PI / 2;
+      return {
+        ...n,
+        x: CX + R * Math.cos(angle),
+        y: CY + R * Math.sin(angle),
+      };
+    });
+  }, [nodes, CX, CY, R]);
 
-  const posMap = {};
-  nodePositions.forEach((n) => { posMap[n.id] = n; });
+  const posMap = useMemo(() => {
+    const map = {};
+    nodePositions.forEach((n) => { map[n.id] = n; });
+    return map;
+  }, [nodePositions]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -119,7 +127,7 @@ function GraphCanvas({ nodes, edges, predictions, selectedNodeId, onSelectNode }
         ctx.fillText(`${pred.predictedEnergyKwh} kWh`, node.x, node.y + radius + 25);
       }
     });
-  }, [nodes, edges, predictions, hoveredNode, selectedNodeId]);
+  }, [edges, hoveredNode, nodePositions, posMap, predMap, selectedNodeId]);
 
   const handleMouseMove = (e) => {
     const canvas = canvasRef.current;
@@ -166,7 +174,6 @@ function GraphCanvas({ nodes, edges, predictions, selectedNodeId, onSelectNode }
 export function GNNGraph() {
   const [loading, setLoading] = useState(true);
   const [verifying, setVerifying] = useState(false);
-  const [topology, setTopology] = useState(null);
   const [predictions, setPredictions] = useState(null);
   const [editableNodes, setEditableNodes] = useState([]);
   const [editableEdges, setEditableEdges] = useState([]);
@@ -181,7 +188,6 @@ export function GNNGraph() {
           gnnService.getTopology(),
           gnnService.getPredictions(),
         ]);
-        setTopology(topo);
         setPredictions(preds);
         const initNodes = (topo?.nodes || []).map((n) => ({
           ...n,
@@ -195,7 +201,7 @@ export function GNNGraph() {
         if (initNodes.length > 0) {
           setSelectedNodeId(initNodes[0].id);
         }
-      } catch (e) {
+      } catch {
         setError("Failed to load GNN graph data.");
       } finally {
         setLoading(false);
@@ -252,7 +258,6 @@ export function GNNGraph() {
         gnnService.getTopology(),
         gnnService.getPredictions(),
       ]);
-      setTopology(topo);
       setPredictions(preds);
       const initNodes = (topo?.nodes || []).map((n) => ({
         ...n,
@@ -264,7 +269,7 @@ export function GNNGraph() {
       setEditableNodes(initNodes);
       setEditableEdges(topo?.edges || []);
       if (initNodes.length > 0) setSelectedNodeId(initNodes[0].id);
-    } catch (e) {
+    } catch {
       setError("Failed to reset graph.");
     } finally {
       setLoading(false);

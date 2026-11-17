@@ -7,13 +7,8 @@ from app.config.database import init_db
 # Routers
 from app.routes import auth, appliances, energy, billing, carbon, forecasting, anomaly, recommendations, chatbot, reports, gnn, notifications
 
-# DL training triggers
+# DL dataset generator
 from app.dl.preprocessing.clean_data import generate_synthetic_datasets
-from app.dl.training.train_lstm import train_lstm
-from app.dl.training.train_autoencoder import train_autoencoder
-from app.dl.training.train_whatif import train_whatif
-from app.dl.training.train_recommender import train_recommender
-from app.dl.training.train_gnn import train_gnn
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
@@ -46,24 +41,44 @@ def startup_event():
     gnn_model_path = os.path.join(settings.SAVED_MODELS_DIR, "gnn_energy_model.keras")
     
     if not os.path.exists(lstm_model_path):
-        print("Training LSTM Forecasting Model...")
-        train_lstm()
+        try:
+            from app.dl.training.train_lstm import train_lstm
+            print("Training LSTM Forecasting Model...")
+            train_lstm()
+        except Exception as e:
+            print(f"Deferred training LSTM: {e}")
         
     if not os.path.exists(autoencoder_model_path):
-        print("Training Autoencoder Anomaly Model...")
-        train_autoencoder()
+        try:
+            from app.dl.training.train_autoencoder import train_autoencoder
+            print("Training Autoencoder Anomaly Model...")
+            train_autoencoder()
+        except Exception as e:
+            print(f"Deferred training Autoencoder: {e}")
         
     if not os.path.exists(whatif_model_path):
-        print("Training What-If Predictor MLP Model...")
-        train_whatif()
+        try:
+            from app.dl.training.train_whatif import train_whatif
+            print("Training What-If Predictor MLP Model...")
+            train_whatif()
+        except Exception as e:
+            print(f"Deferred training What-If: {e}")
         
     if not os.path.exists(recommender_model_path):
-        print("Training Recommender Classifier Model...")
-        train_recommender()
+        try:
+            from app.dl.training.train_recommender import train_recommender
+            print("Training Recommender Classifier Model...")
+            train_recommender()
+        except Exception as e:
+            print(f"Deferred training Recommender: {e}")
 
     if not os.path.exists(gnn_model_path):
-        print("Training Graph Neural Network (GNN) Model...")
-        train_gnn()
+        try:
+            from app.dl.training.train_gnn import train_gnn
+            print("Training Graph Neural Network (GNN) Model...")
+            train_gnn()
+        except Exception as e:
+            print(f"Deferred training GNN: {e}")
         
     print("All Deep Learning model training states verified. Server ready.")
 
