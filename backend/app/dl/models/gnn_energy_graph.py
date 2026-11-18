@@ -47,7 +47,7 @@ class GraphConvLayer(layers.Layer):
 
 def build_gnn_model(input_feature_dim: int, num_nodes: int):
     """
-    Builds a Graph Neural Network (GNN) model for multi-household smart grid predictions.
+    Builds a Graph Neural Network (GNN) model for appliance interaction & load predictions.
     
     Inputs:
     - node_features (X): (num_nodes, input_feature_dim)
@@ -59,19 +59,19 @@ def build_gnn_model(input_feature_dim: int, num_nodes: int):
     x_in = layers.Input(shape=(input_feature_dim,), name="node_features")
     a_in = layers.Input(shape=(num_nodes,), name="norm_adj")
 
-    # Layer 1: Graph Convolution 32 units
+    # Layer 1: Graph Convolution 32 units + Layer Normalization
     h1 = GraphConvLayer(units=32, activation="relu", name="gcn_1")([x_in, a_in])
-    h1 = layers.BatchNormalization(name="bn_1")(h1)
+    h1 = layers.LayerNormalization(name="ln_1")(h1)
     h1 = layers.Dropout(0.1, name="drop_1")(h1)
 
-    # Layer 2: Graph Convolution 16 units
+    # Layer 2: Graph Convolution 16 units + Layer Normalization
     h2 = GraphConvLayer(units=16, activation="relu", name="gcn_2")([h1, a_in])
-    h2 = layers.BatchNormalization(name="bn_2")(h2)
+    h2 = layers.LayerNormalization(name="ln_2")(h2)
 
-    # Dense Output Head for household energy & peak kW forecast
-    output = layers.Dense(2, activation="linear", name="household_predictions")(h2)
+    # Dense Output Head for appliance energy & peak kW forecast (sigmoid for [0, 1] scaled bounds)
+    output = layers.Dense(2, activation="sigmoid", name="appliance_predictions")(h2)
 
-    model = keras.Model(inputs=[x_in, a_in], outputs=output, name="GNN_Energy_Grid_Model")
-    model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.01), loss="mse", metrics=["mae"])
+    model = keras.Model(inputs=[x_in, a_in], outputs=output, name="GNN_Appliance_Grid_Model")
+    model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.005), loss="mse", metrics=["mae"])
     
     return model
