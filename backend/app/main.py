@@ -1,4 +1,5 @@
 import os
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config.settings import settings
@@ -10,24 +11,8 @@ from app.routes import auth, appliances, energy, billing, carbon, forecasting, a
 # DL dataset generator
 from app.dl.preprocessing.clean_data import generate_synthetic_datasets
 
-app = FastAPI(
-    title=settings.PROJECT_NAME,
-    docs_url=None,
-    redoc_url=None,
-    openapi_url=None,
-)
-
-# CORS Middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.BACKEND_CORS_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.on_event("startup")
-def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     # 1. Initialize SQLite Database Tables
     print("Initializing SQLite Database...")
     init_db()
@@ -86,6 +71,25 @@ def startup_event():
             print(f"Deferred training GNN: {e}")
         
     print("All Deep Learning model training states verified. Server ready.")
+    yield
+
+
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    lifespan=lifespan,
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
+
+# CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.BACKEND_CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Include Routers
 app.include_router(auth.router, prefix=settings.API_V1_STR)
