@@ -69,7 +69,6 @@ docker compose -f docker/docker-compose.yml up --build
 
 - **Frontend Console:** `http://localhost:5173` (or `http://localhost:80`)
 - **Backend API:** `http://localhost:8000`
-- **Interactive OpenAPI Docs:** `http://localhost:8000/docs`
 
 ---
 

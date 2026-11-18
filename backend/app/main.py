@@ -10,7 +10,12 @@ from app.routes import auth, appliances, energy, billing, carbon, forecasting, a
 # DL dataset generator
 from app.dl.preprocessing.clean_data import generate_synthetic_datasets
 
-app = FastAPI(title=settings.PROJECT_NAME)
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
 
 # CORS Middleware
 app.add_middleware(
