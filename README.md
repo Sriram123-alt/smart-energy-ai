@@ -12,7 +12,7 @@
 
 *Empowering distributed microgrids, renewable prosumers, and smart facilities with spatial Graph Neural Networks, deep predictive forecasting, and automated carbon accounting.*
 
-[Explore Documentation](docs/architecture/SYSTEM_ARCHITECTURE.md) • [API Reference](docs/api_docs/API_REFERENCE.md) • [Executive Summary](docs/final_report/STARTUP_EXECUTIVE_SUMMARY.md)
+[Explore Documentation](docs/architecture/SYSTEM_ARCHITECTURE.md) • [Executive Summary](docs/final_report/STARTUP_EXECUTIVE_SUMMARY.md)
 
 ---
 
@@ -154,7 +154,7 @@ tests/backend/test_helpers.py::test_sanitize_numerical PASSED
 | `GET` | `/api/notifications` | Real-time alert stream and unread count |
 | `POST` | `/api/notifications/dispatch-test`| Trigger simulated email and console alert |
 
-For full endpoint schemas and payloads, consult the [API Reference](docs/api_docs/API_REFERENCE.md).
+
 
 ---
 
