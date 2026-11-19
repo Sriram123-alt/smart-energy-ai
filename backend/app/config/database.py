@@ -20,6 +20,16 @@ def init_db():
         hashed_password TEXT NOT NULL
     );
     """)
+
+    # Seed Default Demo User if not present
+    cursor.execute("SELECT COUNT(*) FROM users WHERE email = 'demo@energyai.com'")
+    if cursor.fetchone()[0] == 0:
+        from app.config.security import get_password_hash
+        hashed_pwd = get_password_hash("password123")
+        cursor.execute(
+            "INSERT INTO users (id, name, email, hashed_password) VALUES (?, ?, ?, ?)",
+            ("usr_demo", "Grid Demo Operator", "demo@energyai.com", hashed_pwd)
+        )
     
     # 2. Appliances Table
     cursor.execute("""

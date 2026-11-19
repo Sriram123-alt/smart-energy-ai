@@ -91,6 +91,17 @@ export function Login() {
               <span>Access Console</span>
             )}
           </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setEmail("demo@energyai.com");
+              setPassword("password123");
+            }}
+            className="w-full py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 font-medium text-xs transition border border-slate-700/60 flex items-center justify-center space-x-2 cursor-pointer"
+          >
+            <span>⚡ Auto-Fill Demo Credentials</span>
+          </button>
         </form>
 
         <div className="mt-6 text-center">
